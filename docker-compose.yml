@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  web:
+
+    # Наш файл докер находиться в текущем каталоге, будет использвовать (.)
+    build: .
+    container_name: web_app_gbank
+    env_file:
+      - .env
+    ports:
+      - "3537:3537"
+    volumes:
+      - .:/usr/src/app
+    command: air cmd/app/main.go
+
+  db:
+    image: postgres:latest
+    container_name: postgres_database
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+volumes:
+  postgres-db:
